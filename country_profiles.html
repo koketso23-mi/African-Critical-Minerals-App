@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Country Profiles{% endblock %}
+{% block content %}
+<h2>Country Profiles</h2>
+<nav aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> › Country Profiles</nav>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+    <div>
+        {% if session.get('role') == 'Researcher' %}
+            <a href="{{ url_for('download_countries_pdf') }}" class="btn btn-ghost">Download countries PDF</a>
+        {% endif %}
+    </div>
+    <form method="get" style="margin:0;">
+        <input type="text" name="search" placeholder="Search countries..." value="{{ search_query or '' }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+</div>
+
+{% if message %}<p style="color: green; text-align: center;">{{ message }}</p>{% endif %}
+
+<div class="grid" style="margin-top:16px;">
+    {% for country, info in countries.items() %}
+    <div class="card" role="article" aria-labelledby="country-{{ loop.index }}">
+        <h3 id="country-{{ loop.index }}">{{ country }}</h3>
+        <p><strong>GDP:</strong> ${{ info.GDP_BillionUSD }}B &nbsp; | &nbsp; <strong>Mining Revenue:</strong> ${{ info.MiningRevenue_BillionUSD }}B</p>
+        <p><strong>Key Projects:</strong> {{ info.KeyProjects }}</p>
+        <p><strong>Risk Level:</strong> {{ info.get('RiskLevel', 'Medium') }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if session['role'] == 'Researcher' or 'insights' in features %}
+    <div class="card" style="margin-top:16px;">
+        <h3>Add Researcher Insight (Countries)</h3>
+        <form method="POST">
+            <textarea name="insight" rows="2" placeholder="Add your insight here..." required></textarea>
+            <div style="margin-top:8px;"><button class="btn btn-primary" type="submit">Submit Insight</button></div>
+        </form>
+    </div>
+{% endif %}
+
+{% if insights %}
+    <div class="card" style="margin-top:16px;">
+        <h4>Researcher Insights</h4>
+        <ul>
+        {% for i in insights %}
+            <li><strong>{{ i.user }}</strong>: {{ i.insight }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}

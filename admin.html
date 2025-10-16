@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<h2>Admin Panel: Manage Data</h2>
+<nav aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> > Admin Panel</nav>
+{% if message %}<p style="color: green; text-align: center;" role="alert">{{ message }}</p>{% endif %}
+
+<div class="card">
+    <h3>Edit Mineral</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="edit_mineral">
+        <label for="mineral_name">Select Mineral:</label>
+        <select name="mineral_name" id="mineral_name" required>
+                {% for mineral in minerals.keys() %}
+                <option value="{{ mineral }}">{{ mineral }}</option>
+                {% endfor %}
+        </select>
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" rows="2" required></textarea>
+        <label for="market_price">Market Price (USD/tonne):</label>
+        <input type="number" name="market_price" id="market_price" required>
+        <div style="margin-top:10px;"><button class="btn btn-primary" type="submit">Update Mineral</button></div>
+    </form>
+</div>
+<div class="card" style="margin-top:12px;">
+    <h3>Delete Mineral</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="delete_mineral">
+        <select name="mineral_name" required>
+                {% for mineral in minerals.keys() %}
+                <option value="{{ mineral }}">{{ mineral }}</option>
+                {% endfor %}
+        </select>
+        <div style="margin-top:10px;"><button class="btn btn-danger" type="submit">Delete Mineral</button></div>
+    </form>
+</div>
+
+<div class="card" style="margin-top:12px;">
+    <h3>Add Country</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="add_country">
+        <label for="country_name">Country Name:</label>
+        <input type="text" name="country_name" required>
+        <label for="gdp">GDP (Billion USD):</label>
+        <input type="number" name="gdp" required>
+        <label for="mining_revenue">Mining Revenue (Billion USD):</label>
+        <input type="number" name="mining_revenue" required>
+        <label for="key_projects">Key Projects:</label>
+        <input type="text" name="key_projects" required>
+        <div style="margin-top:10px;"><button class="btn btn-primary" type="submit">Add Country</button></div>
+    </form>
+</div>
+<div class="card" style="margin-top:12px;">
+    <h3>Delete Country</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="delete_country">
+        <select name="country_name" required>
+                {% for country in countries.keys() %}
+                <option value="{{ country }}">{{ country }}</option>
+                {% endfor %}
+        </select>
+        <div style="margin-top:10px;"><button class="btn btn-danger" type="submit">Delete Country</button></div>
+    </form>
+</div>
+
+<div class="card" style="margin-top:12px;">
+    <h3>Add Site</h3>
+  <form method="POST">
+    <input type="hidden" name="action" value="add_site">
+    <label for="site_name">Site Name:</label>
+    <input type="text" name="site_name" required>
+    <label for="site_country">Country:</label>
+    <select name="site_country" required>
+        {% for country in countries.keys() %}
+        <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+    </select>
+    <label for="site_mineral">Mineral:</label>
+    <select name="site_mineral" required>
+        {% for mineral in minerals.keys() %}
+        <option value="{{ mineral }}">{{ mineral }}</option>
+        {% endfor %}
+    </select>
+    <label for="latitude">Latitude:</label>
+    <input type="number" step="any" name="latitude" required>
+    <label for="longitude">Longitude:</label>
+    <input type="number" step="any" name="longitude" required>
+    <label for="production">Production (tonnes):</label>
+    <input type="number" name="production" required>
+    <div style="margin-top:10px;"><button class="btn btn-primary" type="submit">Add Site</button></div>
+  </form>
+</div>
+<div class="card" style="margin-top:12px;">
+    <h3>Edit Site Coordinates</h3>
+    <form method="POST">
+        <label for="site_name_edit">Select Site:</label>
+        <select name="site_name_edit" id="site_name_edit" required>
+                {% for site in sites %}
+                <option value="{{ site.SiteName }}">{{ site.SiteName }} ({{ site.CountryName }})</option>
+                {% endfor %}
+        </select>
+        <label for="edit_latitude">Latitude:</label>
+        <input type="number" step="any" name="edit_latitude" id="edit_latitude" required>
+        <label for="edit_longitude">Longitude:</label>
+        <input type="number" step="any" name="edit_longitude" id="edit_longitude" required>
+        <div style="margin-top:10px; display:flex; gap:8px;">
+            <button class="btn btn-ghost" type="submit" name="action" value="preview_site">Preview Coordinates</button>
+            <button class="btn btn-primary" type="submit" name="action" value="save_site_coords">Save Coordinates</button>
+        </div>
+    </form>
+    {% if map_html_admin %}
+        <div style="margin-top:12px; border:1px solid #e6eefc; border-radius:8px; padding:8px;">
+            <h4>Preview</h4>
+            <div style="height:300px;">{{ map_html_admin | safe }}</div>
+        </div>
+    {% endif %}
+</div>
+<div class="card" style="margin-top:12px;">
+    <h3>Delete Site</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="delete_site">
+        <select name="site_name" required>
+                {% for site in sites %}
+                <option value="{{ site.SiteName }}">{{ site.SiteName }}</option>
+                {% endfor %}
+        </select>
+        <div style="margin-top:10px;"><button class="btn btn-danger" type="submit">Delete Site</button></div>
+    </form>
+</div>
+
+<div class="grid" style="margin-top: 18px;">
+    <div class="card">
+        <h3>All Minerals</h3>
+        <ul>
+        {% for mineral, info in minerals.items() %}
+                <li><strong>{{ mineral }}</strong>: {{ info.Description }} | ${{ info.MarketPriceUSD_per_tonne }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>All Countries</h3>
+        <ul>
+        {% for country, info in countries.items() %}
+                <li><strong>{{ country }}</strong>: GDP ${{ info.GDP_BillionUSD }}B | Mining Revenue ${{ info.MiningRevenue_BillionUSD }}B | Projects: {{ info.KeyProjects }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>All Sites</h3>
+        <ul>
+        {% for site in sites %}
+                <li><strong>{{ site.SiteName }}</strong>: {{ site.MineralName }} in {{ site.CountryName }} ({{ site.Production_tonnes }} tonnes) [{{ site.Latitude }}, {{ site.Longitude }}]</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<p style="color: #888;">Note: Changes are in-memory only and will be lost on restart. To persist, update the CSV files directly.</p>
+{% endblock %}

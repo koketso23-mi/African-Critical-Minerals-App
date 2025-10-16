@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}African Critical Minerals App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    {% set current = request.endpoint or '' %}
+    <div class="main-layout">
+        {% if current != 'login' %}
+        <nav class="sidebar" role="navigation" aria-label="Main Navigation">
+            <div class="sidebar-logo">🪨 African Critical Minerals</div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}" aria-label="Dashboard">Dashboard</a></li>
+                <li><a href="{{ url_for('mineral_database') }}" aria-label="Mineral Database">Mineral Database</a></li>
+                <li><a href="{{ url_for('country_profiles') }}" aria-label="Country Profiles">Country Profiles</a></li>
+                <li><a href="{{ url_for('interactive_charts') }}" aria-label="Interactive Charts">Charts</a></li>
+                <li><a href="{{ url_for('geographical_map') }}" aria-label="Geographical Map">Map</a></li>
+                {% if 'user' in session and session.role == 'admin' %}
+                <li><a href="{{ url_for('admin') }}" aria-label="Admin Panel">Admin</a></li>
+                {% endif %}
+                {% if 'user' in session %}
+                <li><a href="{{ url_for('logout') }}" aria-label="Logout">Logout ({{ session.user }})</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}" aria-label="Login">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        <div class="content-area">
+            <header class="header" role="banner">
+                <div class="header-title">African Critical Minerals App</div>
+                <div class="header-desc">Visualize, analyze, and manage Africa's mineral resources</div>
+            </header>
+            <main class="container" role="main">
+                {% if current != 'login' %}
+                <section class="hero" role="region" aria-label="App description">
+                    <div class="hero-inner">
+                        <h1 class="hero-title">African Critical Minerals — Data, Maps, and Insights</h1>
+                        <p class="hero-desc">Explore mineral resources, mining sites, country profiles, and interactive production and export charts across Africa. Use the dashboard to navigate datasets, visualize trends, and export insights for research and investment decisions.</p>
+                    </div>
+                </section>
+                {% endif %}
+
+                {% if current != 'dashboard' and current != 'login' %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-bottom: 16px;">← Back to Dashboard</a>
+                {% elif current == 'dashboard' and 'user' in session %}
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary" style="margin-bottom: 16px;">← Back to Login</a>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>
