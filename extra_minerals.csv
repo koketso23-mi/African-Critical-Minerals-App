@@ -1,0 +1,8 @@
+MineralID,MineralName,Description,MarketPriceUSD_per_tonne
+5,"Platinum-Group Metals (PGMs)","Catalytic converters, hydrogen fuel cells, catalysts for green hydrogen production",150000
+6,"Bauxite (for Aluminum)","Essential for aluminum production (lightweighting for vehicles, solar panels, electricity grid)",500
+7,Copper,"Wiring, electrical grids, wind turbines, solar photovoltaics, electric vehicle components",9000
+8,Nickel,"Lithium-ion batteries (cathode material), stainless steel, superalloys",20000
+9,Chromium,"Stainless steel production (ferrochrome), essential for high-temperature and corrosion-resistant alloys",3000
+10,Uranium,"Nuclear power generation",100000
+11,"Rare Earth Elements (REEs)","Permanent magnets (wind turbines, EV motors), high-tech electronics, defense applications",50000

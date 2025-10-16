@@ -1,0 +1,5 @@
+MineralID,MineralName,Description,MarketPriceUSD_per_tonne,ImageURL
+1,Cobalt,Used in batteries and alloys,52000,
+2,Lithium,Essential for EV batteries,70000,images/minerals/Lithium.svg
+3,Graphite,Used in batteries and lubricants,800,
+4,Manganese,Used in steel production,2200,

@@ -1,0 +1,4 @@
+RoleID,RoleName,Permissions
+1,Administrator,"Full access (manage users, edit/delete data)"
+2,Investor,"View country profiles, charts, exports, production"
+3,Researcher,"View/export mineral & country data, add insights"

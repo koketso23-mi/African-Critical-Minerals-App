@@ -1,0 +1,4 @@
+UserID,Username,PasswordHash,RoleID,Email
+1,admin01,hash123,1,admin@miningapp.com
+2,investor01,hash456,2,invest@miningapp.com
+3,research01,hash789,3,research@univ.edu
