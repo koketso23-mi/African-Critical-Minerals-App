@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Interactive Charts{% endblock %}
+{% block content %}
+<h2>Interactive Charts (Real Production/Exports)</h2>
+<nav aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> > Charts</nav>
+<form method="GET" aria-label="Filter charts" style="margin-bottom: 20px;">
+    <select name="mineral" aria-label="Select mineral">
+        <option value="all">All Minerals</option>
+        {% for m in minerals %}
+        <option value="{{ m }}" {% if request.args.get('mineral') == m %}selected{% endif %}>{{ m }}</option>
+        {% endfor %}
+    </select>
+    <select name="country" aria-label="Select country">
+        <option value="all">All Countries</option>
+        {% for c in countries %}
+        <option value="{{ c }}" {% if request.args.get('country') == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter Data</button>
+</form>
+
+<div id="chart_prod_container" style="margin-bottom: 24px;">
+    <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:10px;">
+        <button onclick="downloadChart('chart_prod_container','png')">Download PNG</button>
+        <button onclick="downloadChart('chart_prod_container','svg')">Download SVG</button>
+    </div>
+    <div style="margin-bottom: 40px; height: 700px; min-width: 100%; border: 1px solid #ddd; border-radius: 14px; padding: 18px; background: #f8fafc;" role="img" aria-label="Production trends chart">
+        {{ chart_div | safe }}
+    </div>
+</div>
+
+<div id="chart_export_container" style="margin-bottom: 24px;">
+    <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:10px;">
+        <button onclick="downloadChart('chart_export_container','png')">Download PNG</button>
+        <button onclick="downloadChart('chart_export_container','svg')">Download SVG</button>
+    </div>
+    <div style="height: 700px; min-width: 100%; border: 1px solid #ddd; border-radius: 14px; padding: 18px; background: #f8fafc;" role="img" aria-label="Export value trends chart">
+        {{ price_div | safe }}
+    </div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px;">
+    <div id="chart_pie_container" style="border: 1px solid #ddd; border-radius: 14px; padding: 18px; height: 600px; background: #f8fafc; overflow: auto;">
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:10px;">
+            <button onclick="downloadChart('chart_pie_container','png')">Download PNG</button>
+            <button onclick="downloadChart('chart_pie_container','svg')">Download SVG</button>
+        </div>
+        {{ pie_div | safe }}
+    </div>
+    <div id="chart_combo_container" style="border: 1px solid #ddd; border-radius: 14px; padding: 18px; height: 600px; background: #f8fafc; overflow: auto;">
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:10px;">
+            <button onclick="downloadChart('chart_combo_container','png')">Download PNG</button>
+            <button onclick="downloadChart('chart_combo_container','svg')">Download SVG</button>
+        </div>
+        {{ combo_div | safe }}
+    </div>
+</div>
+
+<script>
+function downloadChart(containerId, fmt) {
+    const container = document.getElementById(containerId);
+    if (!container) { alert('Chart container not found'); return; }
+    // Find first Plotly graph div inside the container
+    const gd = container.querySelector('.plotly-graph-div');
+    if (!gd) { alert('Plotly graph not found in container'); return; }
+    // Use Plotly client-side exporter
+    Plotly.toImage(gd, {format: fmt}).then(function(dataUrl){
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = containerId + '.' + fmt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }).catch(function(err){
+        console.error(err);
+        alert('Failed to export chart.');
+    });
+}
+</script>
+<p style="text-align: center; color: #666;">Bar for production (grouped by year/mineral). Line for exports (trends). Hover for details. Data from production_stats.csv (2023-2024).</p>
+{% endblock %}

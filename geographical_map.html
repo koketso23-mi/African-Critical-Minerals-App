@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Geographical Map{% endblock %}
+{% block content %}
+<h2>Geographical Data Visualization (Real Sites on Google Maps)</h2>
+<nav aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> > Map</nav>
+<form method="GET" style="margin-bottom: 10px;">
+    <select name="mineral" aria-label="Select mineral for map">
+        <option value="all">All Minerals</option>
+        {% for m in minerals %}
+        <option value="{{ m }}" {% if request.args.get('mineral') == m %}selected{% endif %}>{{ m }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter Sites</button>
+</form>
+<div style="height: 600px; border: 1px solid #ddd; border-radius: 8px;">{{ map_html | safe }}</div>
+<p>Default: Google Satellite (English labels, imagery). Toggle Roadmap for streets. Zoom/click pins for details.</p>
+{% endblock %}

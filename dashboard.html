@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<h2 style="font-size:2.2rem; margin-bottom: 8px;">Welcome, {{ session.user }} ({{ role }})</h2>
+{% if success %}<p style="color: green; text-align: center; padding: 10px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; margin: 10px 0;" role="alert">{{ success }}</p>{% endif %}
+<nav aria-label="Breadcrumb" style="margin-bottom: 18px;">Home</nav>
+
+<!-- Quick Stats -->
+<div class="stat-row" style="margin-bottom: 32px; gap: 32px;">
+    <div class="stat" style="font-size:1.5rem; padding: 24px 32px; min-width:180px;">
+        <strong>{{ num_countries }}</strong>
+        <div style="font-size:1rem; margin-top:6px;">Countries</div>
+    </div>
+    <div class="stat" style="font-size:1.5rem; padding: 24px 32px; min-width:180px;">
+        <strong>{{ num_minerals }}</strong>
+        <div style="font-size:1rem; margin-top:6px;">Minerals</div>
+    </div>
+    <div class="stat" style="font-size:1.5rem; padding: 24px 32px; min-width:180px;">
+        <strong>{{ num_sites }}</strong>
+        <div style="font-size:1rem; margin-top:6px;">Sites</div>
+    </div>
+</div>
+
+<h3 style="font-size:1.3rem; margin-bottom: 18px;">Available Features:</h3>
+<div class="grid" style="margin-bottom: 32px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+    {% for feature in features %}
+        {% if feature == 'database' %}
+        <div style="padding: 32px; background: #e3f2fd; border-radius: 12px; text-align: center; box-shadow: 0 2px 12px rgba(30,58,138,0.10); font-size:1.15em;">
+            <a href="{{ url_for('mineral_database') }}" style="text-decoration: none; color: #1976d2; font-weight: bold; font-size:1.15em;">📊 Mineral Database</a>
+        </div>
+        {% endif %}
+        {% if feature == 'profiles' %}
+        <div style="padding: 32px; background: #e8f5e8; border-radius: 12px; text-align: center; box-shadow: 0 2px 12px rgba(56,142,60,0.10); font-size:1.15em;">
+            <a href="{{ url_for('country_profiles') }}" style="text-decoration: none; color: #388e3c; font-weight: bold; font-size:1.15em;">🌍 Country Profiles</a>
+        </div>
+        {% endif %}
+        {% if feature == 'charts' %}
+        <div style="padding: 32px; background: #fff3e0; border-radius: 12px; text-align: center; box-shadow: 0 2px 12px rgba(245,124,0,0.10); font-size:1.15em;">
+            <a href="{{ url_for('interactive_charts') }}" style="text-decoration: none; color: #f57c00; font-weight: bold; font-size:1.15em;">📈 Interactive Charts</a>
+        </div>
+        {% endif %}
+        {% if feature == 'map' %}
+        <div style="padding: 32px; background: #f3e5f5; border-radius: 12px; text-align: center; box-shadow: 0 2px 12px rgba(123,31,162,0.10); font-size:1.15em;">
+            <a href="{{ url_for('geographical_map') }}" style="text-decoration: none; color: #7b1fa2; font-weight: bold; font-size:1.15em;">🗺️ Geographical Map</a>
+        </div>
+        {% endif %}
+    {% endfor %}
+    {% if is_admin %}
+    <div style="padding: 32px; background: #ffebee; border-radius: 12px; text-align: center; box-shadow: 0 2px 12px rgba(211,47,47,0.10); font-size:1.15em;">
+        <a href="{{ url_for('admin') }}" style="text-decoration: none; color: #d32f2f; font-weight: bold; font-size:1.15em;">🔧 Admin Panel (Add/Edit/Remove)</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
