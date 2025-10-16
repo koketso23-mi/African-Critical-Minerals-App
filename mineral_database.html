@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Mineral Database{% endblock %}
+{% block content %}
+<h2>Mineral Database</h2>
+<nav aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> › Mineral Database</nav>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+    <div>
+        {% set user_role = session.get('role') %}
+        {% set role_perms = PERMISSIONS.get(user_role, []) %}
+        {% if 'export' in role_perms or 'all' in role_perms %}
+            <a href="{{ url_for('download_minerals_pdf') }}" class="btn btn-ghost">Download minerals PDF</a>
+        {% endif %}
+    </div>
+    <form method="get" style="margin:0;">
+        <input type="text" name="search" placeholder="Search minerals..." value="{{ search_query or '' }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+</div>
+
+{% if message %}<p style="color: green; text-align: center;">{{ message }}</p>{% endif %}
+
+<div class="grid" style="margin-top: 16px;">
+{% for mineral, info in minerals.items() %}
+    <div class="card">
+        <h3>{{ mineral }}</h3>
+        <p>{{ info.Description }}</p>
+        <p><strong>Market Price (USD/tonne):</strong> {{ info.MarketPriceUSD_per_tonne }}</p>
+    </div>
+{% endfor %}
+</div>
+
+{% if session['role'] == 'Researcher' or 'insights' in features %}
+    <div class="card" style="margin-top:16px;">
+        <h3>Add Researcher Insight (Minerals)</h3>
+        <form method="POST">
+            <textarea name="insight" rows="2" placeholder="Add your insight here..." required></textarea>
+            <div style="margin-top:8px;"><button class="btn btn-primary" type="submit">Submit Insight</button></div>
+        </form>
+    </div>
+{% endif %}
+
+{% if insights %}
+    <div class="card" style="margin-top:16px;">
+        <h4>Researcher Insights</h4>
+        <ul>
+        {% for i in insights %}
+            <li><strong>{{ i.user }}</strong>: {{ i.insight }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}
+
+ 
